@@ -16,11 +16,11 @@
     </contributor>
     <category citation-format="author-date"/>
     <category field="medicine"/>
-    <summary>Harvard style from Imperial College London Library  - 2021</summary>
+    <summary>Harvard style from Imperial College London Library  - 2025</summary>
     <updated>2025-03-17T20:44:13+00:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
-  <macro name="editor">
+    <macro name="editor">
     <names variable="editor">
       <name and="symbol" delimiter=", " initialize-with="."/>
       <label form="short" prefix=" (" suffix=")"/>
@@ -36,6 +36,11 @@
       <substitute>
         <text macro="editor"/>
         <text macro="anon"/>
+        <choose>
+          <if type="article-newspaper" match="any">
+            <text variable="container-title"/>
+          </if>
+        </choose>
       </substitute>
     </names>
   </macro>
@@ -53,19 +58,23 @@
       <if variable="URL DOI" match="any">
         <group>
           <choose>
-            <if variable="DOI">
+            <if variable="DOI" type="patent" match="any">
               <text variable="DOI" prefix="doi:"/>
             </if>
             <else>
-              <text variable="URL"/>
+              <choose>
+                <if type="report" match="none">
+                  <text variable="URL"/>
+                </if>
+              </choose>
             </else>
           </choose>
           <group prefix=" [" suffix="]">
             <choose>
-              <if type="webpage" match="any">
-                <text term="accessed" text-case="capitalize-first" suffix=": "/>
+              <if type="webpage article-newspaper" match="any">
+                <text term="accessed" text-case="capitalize-first" suffix=" "/>
                 <date variable="accessed">
-                  <date-part name="day" suffix=" "/>
+                  <date-part name="day" form="ordinal" suffix=" "/>
                   <date-part name="month" suffix=" "/>
                   <date-part name="year"/>
                 </date>
@@ -101,7 +110,7 @@
       </choose>
     </group>
   </macro>
-  <macro name="year-date">
+ <macro name="year-date">
     <choose>
       <if variable="issued">
         <date variable="issued">
@@ -115,6 +124,12 @@
       </else>
     </choose>
   </macro>
+
+
+
+
+
+
   <macro name="edition">
     <choose>
       <if is-numeric="edition">
@@ -128,34 +143,36 @@
       </else>
     </choose>
   </macro>
-  <macro name="pages">
-    <group>
-      <choose>
-        <if type="book" match="none">
-          <text variable="page"/>
-        </if>
-      </choose>
+
+<macro name="pages">
+   <choose>
+   <if type="article-journal" match="any">
+    <group delimiter="">
+      <text variable="page"/>
     </group>
+   </if> 
+   <else>
+ <group delimiter=" ">
+      <label form="short" variable="page"/>
+      <text variable="page"/>
+    </group>
+     </else>
+  </choose>  
   </macro>
+
   <macro name="issued">
     <choose>
-      <if type="article-newspaper paper-conference broadcast" match="any">
+      <if type="broadcast" match="any">
         <date variable="issued">
           <date-part name="day" suffix=" "/>
           <date-part name="month"/>
         </date>
       </if>
     </choose>
-    <choose>
-      <if type="paper-conference" match="any">
-        <date variable="issued">
-          <date-part name="year" prefix=" "/>
-        </date>
-      </if>
-    </choose>
   </macro>
+
   <citation et-al-min="4" et-al-use-first="1" disambiguate-add-year-suffix="true" collapse="year">
-    <layout prefix="(" suffix=")" delimiter="; ">
+    <layout delimiter=";" prefix="(" suffix=")">
       <group delimiter=":">
         <group delimiter=", ">
           <text macro="author-short"/>
@@ -185,17 +202,12 @@
             <text macro="publisher"/>
           </group>
         </if>
-        <else-if type="webpage post post-weblog" match="any">
+        <else-if type="webpage">
           <group prefix=" " delimiter=". " suffix=".">
             <text macro="title"/>
             <text macro="edition"/>
           </group>
           <group prefix=" " delimiter=". " suffix=".">
-            <date variable="issued">
-              <date-part name="day" suffix=" "/>
-              <date-part name="month" suffix=" "/>
-              <date-part name="year"/>
-            </date>
             <text variable="container-title"/>
           </group>
         </else-if>
@@ -240,16 +252,20 @@
             <text macro="edition" prefix=" " suffix="."/>
             <text macro="issued"/>
             <text macro="publisher" suffix="."/>
-            <label variable="page" form="short"/>
             <text macro="pages" suffix="."/>
           </group>
         </else-if>
-        <else-if type="standard" match="any">
-          <group delimiter=". " suffix=".">
-            <text variable="number"/>
-            <text macro="title"/>
-            <text macro="publisher"/>
-          </group>
+        <else-if type="patent" match="any">
+          <text variable="title" font-style="italic" prefix=" " suffix=". "/>
+          <text variable="authority" prefix=" " suffix=". "/>
+          <text variable="number" suffix=" (Patent)."/>
+          <text variable="URL" prefix=" "/>
+        </else-if>
+        <else-if type="report" match="any">
+          <text variable="title" font-style="italic" prefix=" " suffix=". "/>
+          <text variable="publisher" suffix=". "/>
+          <text variable="number" prefix="Report number: " suffix="."/>
+          <text variable="URL" prefix=" "/>
         </else-if>
         <else>
           <group prefix=" " suffix="." delimiter=" ">
