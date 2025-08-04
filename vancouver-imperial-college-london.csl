@@ -19,7 +19,7 @@
     <updated>2021-11-10T09:54:55+00:00</updated>
     <rights license="http://creativecommons.org/licenses/by-sa/3.0/">This work is licensed under a Creative Commons Attribution-ShareAlike 3.0 License</rights>
   </info>
-  <locale xml:lang="en">
+ <locale xml:lang="en">
     <date form="text" delimiter=" ">
       <date-part name="day" form="ordinal"/>
       <date-part name="month"/>
@@ -75,7 +75,7 @@
         </group>
       </if>
       <else>
-        <group delimiter=". " suffix=",">
+        <group delimiter=". " >
           <text macro="report-details"/>
         </group>
       </else>
@@ -194,16 +194,16 @@
         </group>
       </else-if>
       <else-if type="report">
-        <date variable="issued" delimiter=" ">
+        <date variable="issued" delimiter=" " suffix=".">
           <date-part name="year"/>
-          <date-part name="month" form="short" strip-periods="true" font-variant="normal"/>
         </date>
         <text macro="accessed-date" prefix=" "/>
       </else-if>
       <else-if type="patent">
         <group suffix=".">
           <group delimiter=", ">
-            <text variable="number"/>
+            <text variable="number" suffix=" (Patent)"/>
+           
             <date variable="issued">
               <date-part name="year"/>
             </date>
@@ -223,6 +223,12 @@
           <text variable="event-place"/>
         </group>
       </else-if>
+<else-if type="article-newspaper" match="any">
+        <date form="text" date-parts="year-month-day" variable="issued" suffix=".">
+          <date-part name="day" form="numeric"/>
+          <date-part name="month"/>
+        </date>
+      </else-if>
       <else-if type="webpage" match="none">
         <group suffix=".">
           <date variable="issued">
@@ -230,21 +236,16 @@
           </date>
         </group>
       </else-if>
-      <else-if type="article-newspaper" match="any">
-        <date form="text" date-parts="year-month-day" variable="issued">
-          <date-part name="day" form="ordinal"/>
-          <date-part name="month"/>
-        </date>
-      </else-if>
     </choose>
   </macro>
+
   <macro name="pages">
     <choose>
-      <if type="article-journal article-magazine article-newspaper review review-book" match="any">
-        <text variable="page" prefix=": "/>
+      <if type="article-journal article-magazine  review review-book" match="any">
+        <text variable="page" prefix=": " suffix="."/>
       </if>
       <else>
-        <group prefix=" " delimiter=" ">
+        <group prefix=" " delimiter=" " suffix=".">
           <label variable="page" form="short" plural="never"/>
           <text variable="page"/>
         </group>
@@ -262,7 +263,10 @@
   <macro name="report-details">
     <choose>
       <if type="report">
-        <text variable="number" prefix="Report number: "/>
+          
+        <text variable="publisher" suffix=". "/>
+        <text variable="number" prefix="Report number: " suffix=", "/>
+        
       </if>
     </choose>
   </macro>
@@ -282,7 +286,7 @@
         <text macro="title"/>
         <text variable="scale"/>
       </group>
-      <group delimiter=" " suffix=". ">
+      <group delimiter=" " suffix=" ">
         <text macro="editor"/>
         <text macro="container-title"/>
         <text macro="publisher"/>
