@@ -122,11 +122,6 @@
     </choose>
   </macro>
 
-
-
-
-
-
   <macro name="edition">
     <choose>
       <if is-numeric="edition">
@@ -283,7 +278,7 @@
           </group>
         </else>
       </choose>
-      <text prefix=" " macro="access" suffix="."/>
+      <text prefix=" " macro="access" suffix=" "/>
     </layout>
   </bibliography>
 </style>
