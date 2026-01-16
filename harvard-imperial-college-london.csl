@@ -104,6 +104,7 @@
             <text variable="publisher"/>
           </group>
         </if>
+        
       </choose>
     </group>
   </macro>
